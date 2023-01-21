@@ -1,6 +1,6 @@
 {
     "name": "subhh/vufind-solrmarc",
-    "description": "Customizable RecordDriver Module",
+    "description": "Customizable RecordDriver",
     "authors": [
         {
             "name": "Hajo Seng",
