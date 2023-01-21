@@ -1,0 +1,13 @@
+<?php if (has_content($fields, 'ShortTitle')): ?>
+    <?php echo get_content($fields, 'ShortTitle'); ?>
+    <?php if (has_content($fields, 'SubTitle')) { echo ' : ' . get_content($fields, 'SubTitle'); } ?>
+    <?php if (has_content($fields, 'TitleSection')) { echo ' / ' . get_content($fields, 'TitleSection'); } ?>
+    <?php if (has_content($fields, 'TitleStatement')) { echo ' / ' . get_content($fields, 'TitleStatement'); } ?>
+    <?php if (has_content($fields, 'TitleAdditionalPart')): ?>
+        <?php echo ' ; ' . implode(' ; ', get_content($fields, 'TitleAdditionalPart')); ?>
+        <?php if (has_content($fields, 'TitleAdditionalVolume')) { echo ' / ' . implode(' / ', get_content($fields, 'TitleAdditionalVolume')); } ?>
+        <?php if (has_content($fields, 'TitleAdditionalStatement')) { echo ' / ' . implode(' / ', get_content($fields, 'TitleAdditionalStatement')); } ?>
+    <?php endif; ?>
+<?php else: ?>
+    <?php echo $this->translate('no title'); ?>
+<?php endif; ?>

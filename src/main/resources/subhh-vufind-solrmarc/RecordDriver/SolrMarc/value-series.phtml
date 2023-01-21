@@ -1,0 +1,30 @@
+<ul>
+  <?php
+  // Get series IDs, which are stored in separate array elements
+  $links = array_values(array_filter($data, fn($element) => isset($element['link'])));
+  ?>
+
+  <?php foreach ($data as $index => $item): ?>
+    <?php if (!is_array($item)) continue; ?>
+    <?php if (isset($item['link'])) continue; ?>
+
+    <li>
+      <?php
+      $query = http_build_query([
+        'lookfor' => sprintf('"%s"', addcslashes($links[$index]['link']['data'][0] ?? '', '"')),
+        'type' => 'id',
+      ]);
+      ?>
+
+      <?php foreach ($item as $key => $field): ?>
+        <?php $values = array_map(fn($value) => $this->transEsc($value), $field['data']); ?>
+
+        <?php if ($key === 'linkname'): ?>
+          <a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=join('&nbsp;/ ', $values) ?></a>
+        <?php else: ?>
+          &ndash; <?=join('&nbsp;/ ', $values) ?>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </li>
+  <?php endforeach; ?>
+</ul>

@@ -1,0 +1,32 @@
+<ul>
+  <?php foreach ($data as $index => $person): ?>
+    <?php
+    if (!is_int($index)) {
+      continue;
+    }
+
+    $term = $person['link']['data'][0];
+    $query = ['lookfor' => sprintf('"%s"', addcslashes($term, '"')), 'type' => 'Person'];
+    $href = sprintf('%s?%s', $this->url('search-results'), http_build_query($query));
+    $name = $person['link']['data'][0];
+
+    $desc = [];
+
+    if (!empty($person['additional']['data'][0])) {
+      $desc[] = '&ndash; ' . $this->escapeHtml(implode(', ', $person['additional']['data']));
+    }
+
+    if (!empty($person['description']['data'][0])) {
+      $desc[] = '[' . $this->escapeHtml(implode(', ', $person['description']['data'])) . ']';
+    }
+
+    $desc = implode(' ', $desc);
+    ?>
+
+    <li>
+      <a href="<?=$this->escapeHtmlAttr($href) ?>"><?=$this->escapeHtml($name) ?></a>
+
+      <?=$desc ?>
+    </li>
+  <?php endforeach; ?>
+</ul>

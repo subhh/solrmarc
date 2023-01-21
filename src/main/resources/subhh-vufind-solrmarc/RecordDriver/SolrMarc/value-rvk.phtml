@@ -1,0 +1,23 @@
+<ul>
+  <?php foreach ($data as $item): ?>
+    <?php if (!is_array($item)) continue; ?>
+
+    <li>
+      <?php foreach ($item as $key => $field): ?>
+        <?php $values = array_map(fn($value) => $this->transEsc($value), $field['data']); ?>
+
+        <?php if ($key === 'linkname'): ?>
+          <?php
+          $query = http_build_query([
+            'lookfor' => sprintf('%s rvk', addcslashes($item['link']['data'][0], '"')),
+            'type' => 'Class',
+          ]);
+          ?>
+          <a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=implode('&nbsp;/ ', $values) ?></a>
+        <?php elseif ($key === 'description'): ?>
+          [<?=implode(', ', $values) ?>]
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </li>
+  <?php endforeach; ?>
+</ul>

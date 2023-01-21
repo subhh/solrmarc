@@ -1,0 +1,16 @@
+<?php if (empty($data[0]['linkname'])) return; ?>
+
+<?php
+$label = $data[0]['linkname']['data'][0];
+if (isset($data[1]['link']['data'][0])) {
+    $lookfor = $data[1]['link']['data'][0];
+} elseif (isset($data[0]['link']['data'][0])) {
+    $lookfor = str_replace('(DE-600)', '(DE-599)ZDB', $data[0]['link']['data'][0]);
+} else {
+    $lookfor = $label;
+}
+$query = http_build_query([
+    'lookfor' => sprintf('"%s"', addcslashes($lookfor, '"')),
+]);
+?>
+<a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=$label ?></a>

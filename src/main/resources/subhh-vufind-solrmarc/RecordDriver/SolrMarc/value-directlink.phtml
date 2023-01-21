@@ -1,0 +1,10 @@
+<ul>
+  <?php foreach ($data as $key => $item): ?>
+    <?php if (!is_array($item)) continue; ?>
+    <?php if (empty($item['linkname'])) continue; ?>
+
+    <li>
+      <a href="<?=$this->escapeHtmlAttr($item['link']['data'][0]) ?>"><?=$item['linkname']['data'][0] ?></a>
+    </li>
+  <?php endforeach ?>
+</ul>

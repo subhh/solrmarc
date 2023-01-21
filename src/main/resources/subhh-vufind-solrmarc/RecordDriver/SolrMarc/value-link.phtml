@@ -1,0 +1,16 @@
+<ul>
+  <?php foreach ($data as $item): ?>
+    <?php if (!is_array($item)) continue; ?>
+    <li>
+      <?php
+      $lookfor = join(', ', $item['link']['data']);
+      $query = http_build_query([
+        'lookfor' => addcslashes($lookfor, '"'),
+        'type' => $linktype,
+      ]);
+      $label = $item['linkname']['data'][0] ?? $lookfor;
+      ?>
+      <a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=$label ?></a>
+    </li>
+  <?php endforeach; ?>
+</ul>

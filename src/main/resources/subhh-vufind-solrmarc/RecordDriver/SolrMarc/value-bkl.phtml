@@ -1,0 +1,17 @@
+<ul>
+  <?php foreach ($data as $item): ?>
+    <?php if (!$item || !is_array($item)) continue; ?>
+
+    <li>
+      <?php
+      $query = http_build_query([
+        'lookfor' => '"' . addcslashes(urlencode($item['link']['data'][0]), '"') . '"',
+        'type' => 'BK',
+      ]);
+      $translatedValues = array_map(fn($value) => $this->transEsc($value), $item['linkname']['data']);
+      ?>
+
+      <a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=implode(' ', $translatedValues) ?></a>
+    </li>
+  <?php endforeach; ?>
+</ul>

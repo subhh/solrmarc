@@ -1,0 +1,28 @@
+<ul>
+  <?php foreach ($data as $index => $item): ?>
+    <?php if (!is_array($item)) continue; ?>
+    <?php if ($item['sequence']['data'][0] !== '0') continue; ?>
+
+    <li>
+      <ul class="inline-list">
+        <?php for ($i = $index; $i < count($data); $i++): ?>
+          <?php
+          if (!isset($data[$i])) continue;
+
+          $item = $data[$i];
+          if ($i > $index && $item['sequence']['data'][0] === '0') break;
+
+          $query = http_build_query([
+            'lookfor' => sprintf('"%s"', addcslashes($item['link']['data'][0], '"')),
+            'type' => 'Subject',
+          ]);
+          $label = ($item['linkname'] ?? $item['link'])['data'][0];
+          ?>
+          <li>
+            <a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=$label?></a>
+          </li>
+        <?php endfor; ?>
+      </ul>
+    </li>
+  <?php endforeach; ?>
+</ul>

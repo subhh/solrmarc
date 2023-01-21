@@ -1,0 +1,113 @@
+<?php
+function has_content ($field, $name) {
+  return !empty($field[$name][0][0]['data'][0]);
+}
+
+function get_content ($field, $name) {
+  return $field[$name][0][0]['data'][0];
+}
+
+$this->metadata()->generateMetatags($this->driver);
+
+$coreFieldCategories = [
+  'id',
+  'title2',
+  'person',
+  'description',
+  'publication',
+  'subject',
+  'physical',
+  'related',
+  'link',
+  'internal',
+];
+
+$titleFields = $this->solrDetails()->getCoreFields($this->driver, ['title']);
+?>
+
+<div
+  class="media"
+  resource="#record"
+  typeof="<?=$this->driver->getSchemaOrgFormats()?> Product"
+  vocab="http://schema.org/"
+>
+  <div class="media-body">
+    <?=$this->record($this->driver)->getToolbar() ?>
+
+    <div class="media-title-items">
+      <h1 property="name">
+        <?php $title = $this->render('RecordDriver/SolrMarc/title.phtml', ['fields' => $titleFields]); ?>
+        <?=$this->transEsc($title) ?>
+      </h1>
+    </div>
+
+    <?php $summary = $titleFields['Summary'][0][0]['data'][0] ?? ''; ?>
+    <?php if ($summary): ?>
+      <div class="media-summary">
+        <h2 class="sr-only"><?=$this->transEsc('Summary') ?></h2>
+        <p id="summary"><?=$summary ?></p>
+        <p>
+          <a
+            role="button"
+            href="javascript:;"
+            onclick="theme.toggleAbstract()"
+            aria-controls="summary"
+            aria-expanded="false"
+            data-alt-label="<?=$this->transEsc('Show less') ?>&lt;i class='bel-pfeil-o01'>&lt;/i>"
+          >
+            <?=$this->transEsc('Show more') ?><i class="bel-pfeil-u01"></i>
+          </a>
+        </p>
+      </div>
+    <?php endif; ?>
+
+    <table class="table table-striped">
+      <caption class="sr-only">
+        <?=$this->transEsc('Bibliographic Details') ?>
+      </caption>
+
+      <tbody>
+        <?php
+        $fields = [];
+        if ($coreFieldCategories) {
+          foreach ($coreFieldCategories as $category) {
+            $fields[$category] = $this->solrDetails()->getCoreFields($this->driver, [$category]);
+          }
+        } else {
+          $fields = ['' => $this->solrDetails()->getCoreFields($this->driver, [])];
+        }
+        ?>
+        <?php foreach ($fields as $field): ?>
+          <?php foreach ($field as $name => $content): ?>
+            <?php if (!empty($content[0])): ?>
+              <?php
+              $partial = 'RecordDriver/SolrMarc/value-' . ($content['template'] ?: 'plain');
+              // WORKAROUND: Remove duplicate entries
+              // TODO: Fix the catalogue so there are no duplicate entries in the first place
+              $dedupedContent = array_map('unserialize', array_unique(array_map('serialize', $content)));
+              $value = $this->render($partial, ['data' => $dedupedContent]);
+              ?>
+
+              <?php if (!empty($value)): ?>
+                <tr>
+                  <th><?=$this->transEsc($name);?></th>
+                  <td>
+                    <?=$value ?>
+
+                    <?php // NOTE: Kept for testing ?>
+                    <?php /*
+                    <details style="background: yellow">
+                      <summary>Internformat</summary>
+                      <pre><?php var_dump($content); ?></pre>
+                    </details>
+                    */ ?>
+                  </td>
+                </tr>
+              <?php endif; ?>
+            <?php endif; ?>
+          <?php endforeach; ?>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
+</div>

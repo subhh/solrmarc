@@ -1,0 +1,27 @@
+<ul>
+  <?php foreach ($data as $item): ?>
+    <?php if (!is_array($item)) continue; ?>
+
+    <li>
+      <?php foreach ($item as $key => $field): ?>
+        <?php $values = array_map(fn($value) => $this->transEsc($value), $field['data']); ?>
+
+        <?php if ($key === 'description'): ?>
+          [<?=join(', ', $values) ?>]
+        <?php elseif ($key === 'prefix'): ?>
+          <?=join(' ', $values) ?><?=count($item) > 1 ? ':' : '' ?>
+        <?php elseif ($key === 'link'): ?>
+          <?php
+          $query = http_build_query([
+            'lookfor' => sprintf('"%s"', addcslashes(implode(', ', $item['link']['data']), '"')),
+            'type' => 'Title',
+          ]);
+          ?>
+          <a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=implode(', ', $values) ?></a>
+        <?php else: ?>
+          <?=join(', ', $values) ?>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </li>
+  <?php endforeach; ?>
+</ul>

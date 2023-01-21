@@ -1,0 +1,6 @@
+<?php $format = ($this->driver->tryMethod('getFormats') ?? [])[0]; ?>
+<i
+  class="record-cover-icon <?=$this->subhhMediatypeIconClass($format) ?>"
+  aria-label="<?=$this->transEsc($format) ?>"
+  title="<?=$this->transEsc($format) ?>"
+></i>

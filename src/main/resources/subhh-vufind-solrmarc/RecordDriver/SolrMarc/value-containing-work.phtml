@@ -1,0 +1,55 @@
+<?php
+// If we only got a title without a linkname or any other details, hide the field
+if (count($data) <= 2 && array_keys($data[0]) === ['title']) return;
+?>
+
+<ul>
+  <?php foreach ($data as $item): ?>
+    <?php if (!is_array($item)) continue; ?>
+
+    <li>
+      <?php foreach ($item as $key => $field): ?>
+        <?php if ($key === 'link') continue; ?>
+        <?php if ($key === 'volume') continue; ?>
+
+        <?php $values = array_map(fn($value) => $this->transEsc($value), $field['data']); ?>
+
+        <?php if ($key === 'prefix'): ?>
+          <?=join(' ', $values) ?><?=count($item) > 1 ? ':' : '' ?>
+        <?php elseif ($key === 'linkname' || $key === 'title'): ?>
+          <?php
+          $link = $item['link']['data'][0] ?? $data[1]['link']['data'][0] ?? null;
+          if ($link) {
+            $query = http_build_query([
+              'lookfor' => sprintf('"%s"', addcslashes($link, '"')),
+              'type' => 'id',
+            ]);
+          }
+
+          if ($key === 'linkname' && isset($data[0]['title']['data'][0])) {
+            $label = $data[0]['title']['data'][0];
+            $appendix = '&ndash; ' . join('&nbsp;; ', $values);
+          } else {
+            $label = join('&nbsp;; ', $values);
+            $appendix = '';
+          }
+          ?>
+
+          <?php if (isset($query)): ?>
+            <a href="<?=$this->url('search-results') ?>?<?=$query ?>"><?=$label ?></a>
+          <?php else: ?>
+            <?=$label ?>
+          <?php endif; ?>
+
+          <?=$appendix ?>
+
+          <?php if (isset($data[1]['volume'])): ?>
+            &ndash; <?=join(', ', $data[1]['volume']['data']) ?>
+          <?php endif; ?>
+        <?php else: ?>
+          <?=join('&nbsp;; ', $values) ?>
+        <?php endif; ?>
+      <?php endforeach; ?>
+    </li>
+  <?php endforeach; ?>
+</ul>
