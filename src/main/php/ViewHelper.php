@@ -41,8 +41,6 @@ use Laminas\View\Helper\AbstractHelper;
  */
 class ViewHelper extends AbstractHelper
 {
-    use \VuFind\View\Helper\Root\ClassBasedTemplateRendererTrait;
-
     /**
      * Get the core field entries
      *
