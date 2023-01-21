@@ -1,0 +1,28 @@
+{
+    "name": "subhh/vufind-solrmarc",
+    "description": "Customizable RecordDriver Module",
+    "authors": [
+        {
+            "name": "Hajo Seng",
+            "email": "hajo.seng@sub.uni-hamburg.de"
+        },
+        {
+            "name": "David Maus",
+            "email": "david.maus@sub.uni-hamburg.de"
+        }
+    ],
+    "homepage": "https://github.com/subhh/vufind-solrmarc",
+    "license": "GPL-2.0-or-later",
+    "support": {
+        "issues": "https://github.com/subhh/vufind-solrmarc/issues"
+    },
+    "autoload": {
+        "psr-4": {
+            "SUBHH\\VuFind\\SolrMarc\\": [ "src/main/php", "src/test/php"]
+        }
+    },
+    "require-dev": {
+        "vufind/vufind": "^8.1",
+        "ahand/mobileesp": "dev-master"
+    }
+}
